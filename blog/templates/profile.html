@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    {% include 'external/form_errors.html' %}
+    <h3>{{ current_user.username }}</h3>
+    <p>{{ current_user.email }}</p>
+    <hr>
+    <br>
+    <form action="" method="post">
+        {{ form.csrf_token }}
+        {{ form.username.label }} {{ form.username }}
+        {{ form.email.label }} {{ form.email }}
+        <input type="submit" value="Update" class="btn btn-primary">
+    </form>
+{% endblock %}

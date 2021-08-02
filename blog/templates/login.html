@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    {% include 'external/form_errors.html' %}
+    <form action="" method="post">
+        {{ form.csrf_token }}
+        <div class="col-lg-3">
+            {{ form.email.label(class='form-control-label') }} : {{ form.email(class='form-control form-control-sm') }}
+            {{ form.password.label(class='form-control-label') }} : {{ form.password(class='form-control') }}
+            {{ form.remember.label(class='form-control-label') }}
+            : {{ form.remember(class='form-check-input position-static') }}
+            <br>
+            {{ form.submit(class='btn btn-info') }}
+        </div>
+
+    </form>
+{% endblock %}
