@@ -2,12 +2,13 @@
     use flask_wtf part of WTForms : pip install Flask-WTF
     in the new version of these packages were separated from each other
 """
+from flask_login import current_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 
 from blog.models import User
-from flask_login import current_user
+
 
 class RegistrationForm(FlaskForm):
     """
@@ -20,7 +21,6 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=(DataRequired(), EqualTo('password', message='passwords must match')))
     submit = SubmitField('Register')
-
 
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
@@ -62,3 +62,7 @@ class UpdateProfileForm(FlaskForm):
             if user:
                 raise ValidationError('This email already exists')
 
+
+class PostForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])

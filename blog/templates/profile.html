@@ -2,6 +2,8 @@
 
 {% block content %}
     {% include 'external/form_errors.html' %}
+    <a href="{{ url_for('new_post') }}" class="btn btn-success">Create New Post</a>
+    <br>
     <h3>{{ current_user.username }}</h3>
     <p>{{ current_user.email }}</p>
     <hr>

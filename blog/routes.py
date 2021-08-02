@@ -7,7 +7,7 @@ from flask import render_template, redirect, url_for, Response, flash, request
 from flask_login import login_user, current_user, logout_user, login_required
 
 from blog import app, db, brp
-from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm
+from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
 from blog.models import User
 
 
@@ -80,3 +80,16 @@ def profile():
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template('profile.html', form=form)
+
+
+@app.route('/post/new', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    form = PostForm()
+    if form.validate_on_submit():
+        post = PostForm(title=form.title.data, content=form.content.data, author=current_user)
+        db.session.add(post)
+        db.session.commit()
+        flash('post created', 'info')
+        return redirect(url_for('home'))
+    return render_template('create_post.html', form=form)
