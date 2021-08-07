@@ -2,6 +2,14 @@
 
 
 {% block content %}
-   Home
+    Home
+
+    <div class="card">
+        {% for post in posts %}
+
+            <a href="{{ url_for('detail', post_id=post.id) }}" class="card-body">{{ post.title }}</a>
+        {% endfor %}
+    </div>
+
 {% endblock %}
 

@@ -3,12 +3,12 @@ base routes for app
 """
 from typing import Union
 
-from flask import render_template, redirect, url_for, Response, flash, request
+from flask import render_template, redirect, url_for, Response, flash, request, abort
 from flask_login import login_user, current_user, logout_user, login_required
 
 from blog import app, db, brp
 from blog.forms import RegistrationForm, LoginForm, UpdateProfileForm, PostForm
-from blog.models import User
+from blog.models import User, Post
 
 
 @app.route('/')
@@ -17,7 +17,16 @@ def home() -> str:
     :return home page
     :rtype str
     """
-    return render_template('home.html')
+    posts = Post.query.all()
+    for post in posts:
+        print(post)
+    return render_template('home.html', posts=posts)
+
+
+@app.route('/post/<int:post_id>')
+def detail(post_id):
+    post = Post.query.get_or_404(post_id)
+    return render_template('detail.html', post=post)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -87,9 +96,21 @@ def profile():
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
-        post = PostForm(title=form.title.data, content=form.content.data, author=current_user)
+        post = Post(title=form.title.data, content=form.content.data, author=current_user)
         db.session.add(post)
         db.session.commit()
         flash('post created', 'info')
         return redirect(url_for('home'))
     return render_template('create_post.html', form=form)
+
+
+@app.route('/post/<int:post_id>/delete')
+@login_required
+def delete(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.author != current_user:
+        abort(403)
+    db.session.delete(post)
+    db.session.commit()
+    flash('post deleted', 'info')
+    return redirect(url_for('home'))
