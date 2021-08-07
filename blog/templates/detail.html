@@ -4,6 +4,7 @@
 
     {% if post.author == current_user %}
         <a href="{{ url_for('delete',post_id=post.id) }}" class="btn btn-danger">Delete</a>
+        <a href="{{ url_for('update',post_id=post.id) }}" class="btn btn-success">Update</a>
     {% endif %}
 
     <h3>{{ post.title }}</h3>
